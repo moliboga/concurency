@@ -4,7 +4,7 @@ import java.util.concurrent.*;
 
 public class ReturnOneCallable {
 
-    private static int currentX;
+    private static int currentX = 0;
 
     public static void main(String[] args) throws Exception {
         ExecutorService service = null;
@@ -12,7 +12,7 @@ public class ReturnOneCallable {
             service = Executors.newSingleThreadExecutor();
 
             Future<Integer> result = service.submit(() -> {
-                int x = 0;
+                int x = currentX;
                 for (int i = 0; i < 10; i++){
                     x = i;
                     currentX = i;
