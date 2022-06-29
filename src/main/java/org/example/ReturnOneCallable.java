@@ -26,7 +26,7 @@ public class ReturnOneCallable {
             System.out.println(currentX);
         }
         finally{
-            if(service != null) service.shutdown();
+            if(service != null) service.shutdownNow();
         }
     }
 }
