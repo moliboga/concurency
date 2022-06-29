@@ -2,31 +2,27 @@ package org.example;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ReturnOneCallable {
 
     public static void main(String[] args) throws Exception {
         ExecutorService service = null;
-        AtomicInteger currentX = new AtomicInteger();
+        AtomicReference<Integer> currentX = new AtomicReference<>(0);
         try {
             service = Executors.newSingleThreadExecutor();
-
-            Future<Integer> result = service.submit(() -> {
-                int x = currentX.get();
-                for (int i = 0; i < 10; i++){
-                    x = i;
+            Future<AtomicReference<Integer>> result = service.submit(() -> {
+                for (int i = 0; i < 10; i++) {
                     currentX.set(i);
-                    Thread.sleep(2000);
+                    Thread.sleep(500);
                 }
-                return x;
+                return currentX;
             });
-            System.out.println(result.get(10, TimeUnit.SECONDS));
-        }
-        catch (TimeoutException e){
-            System.out.println(currentX.get());
-        }
-        finally{
-            if(service != null) service.shutdownNow();
+            System.out.println(result.get(3, TimeUnit.SECONDS));
+        } catch (TimeoutException e) {
+            System.out.println(currentX);
+        } finally {
+            if (service != null) service.shutdownNow();
         }
     }
 }
